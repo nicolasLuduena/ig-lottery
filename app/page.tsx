@@ -200,42 +200,44 @@ export default function InstagramLottery() {
       )}
 
       <div className="max-w-4xl mx-auto space-y-6 w-full px-4">
-        <Card className="text-center">
-          <CardHeader>
-            <CardTitle className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              🎉 Instagram Comment Lottery 🎉
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="csv-upload">Upload CSV File</Label>
-              <div className="flex items-center gap-2">
-                <Input
-                  id="csv-upload"
-                  type="file"
-                  accept=".csv"
-                  onChange={handleFileUpload}
-                  ref={fileInputRef}
-                  className="hidden"
-                />
-                <Button
-                  onClick={() => fileInputRef.current?.click()}
-                  variant="outline"
-                  className="w-full"
-                >
-                  <Upload className="w-4 h-4 mr-2" />
-                  Choose CSV File
-                </Button>
+        {!isLotteryRunning && !winner && (
+          <Card className="text-center">
+            <CardHeader>
+              <CardTitle className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                🎉 Instagram Comment Lottery 🎉
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="csv-upload">Upload CSV File</Label>
+                <div className="flex items-center gap-2">
+                  <Input
+                    id="csv-upload"
+                    type="file"
+                    accept=".csv"
+                    onChange={handleFileUpload}
+                    ref={fileInputRef}
+                    className="hidden"
+                  />
+                  <Button
+                    onClick={() => fileInputRef.current?.click()}
+                    variant="outline"
+                    className="w-full"
+                  >
+                    <Upload className="w-4 h-4 mr-2" />
+                    Choose CSV File
+                  </Button>
+                </div>
               </div>
-            </div>
 
-            {comments.length > 0 && (
-              <div className="text-sm text-muted-foreground">
-                📊 Loaded {comments.length} comments
-              </div>
-            )}
-          </CardContent>
-        </Card>
+              {comments.length > 0 && (
+                <div className="text-sm text-muted-foreground">
+                  📊 Loaded {comments.length} comments
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         {/* Lottery Display */}
         {comments.length > 0 && (
