@@ -24,6 +24,7 @@ export default function InstagramLottery() {
   const [countdown, setCountdown] = useState(5);
   const [winner, setWinner] = useState<Comment | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [confettiPieces, setConfettiPieces] = useState<any[]>([]);
   const [currentSelection, setCurrentSelection] = useState<Comment | null>(
     null,
   );
@@ -75,6 +76,46 @@ export default function InstagramLottery() {
   };
 
   useEffect(() => {
+    if (!showConfetti) return;
+
+    const interval = setInterval(() => {
+      const newPieces = Array.from({ length: 3 }).map(() => {
+        const duration = Math.random() * 2 + 2; // 2s to 4s
+        return {
+          id: crypto.randomUUID(),
+          left: Math.random() * 100,
+          size: Math.random() * 10 + 6, // 6px to 16px
+          rotate: Math.random() * 720,
+          drift: (Math.random() - 0.5) * 20, // horizontal drift
+          duration,
+          shape: Math.random() > 0.5 ? "50%" : "0%",
+          color: [
+            "bg-yellow-400",
+            "bg-pink-400",
+            "bg-blue-400",
+            "bg-green-400",
+            "bg-purple-400",
+            "bg-red-400",
+            "bg-orange-300",
+          ][Math.floor(Math.random() * 7)],
+          opacity: Math.random() * 0.5 + 0.5,
+        };
+      });
+
+      setConfettiPieces((prev) => [...prev, ...newPieces]);
+
+      // Cleanup after animation duration
+      newPieces.forEach((p) =>
+        setTimeout(() => {
+          setConfettiPieces((prev) => prev.filter((c) => c.id !== p.id));
+        }, p.duration * 1000),
+      );
+    }, 20); // faster spawn rate
+
+    return () => clearInterval(interval);
+  }, [showConfetti]);
+
+  useEffect(() => {
     if (!isLotteryRunning) return;
 
     if (countdown > 0) {
@@ -124,49 +165,31 @@ export default function InstagramLottery() {
 
       {showConfetti && (
         <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
-          {[...Array(150)].map((_, i) => {
-            const size = Math.random() * 8 + 4;
-            const left = Math.random() * 100;
-            const delay = Math.random() * 2;
-            const duration = Math.random() * 3 + 3;
-            const shape = Math.random() > 0.5 ? "50%" : "0%";
-            const colors = [
-              "bg-yellow-400",
-              "bg-pink-400",
-              "bg-blue-400",
-              "bg-green-400",
-              "bg-purple-400",
-              "bg-red-400",
-              "bg-orange-300",
-            ];
-            const color = colors[Math.floor(Math.random() * colors.length)];
-
-            return (
-              <div
-                key={i}
-                className={`${color}`}
-                style={{
-                  position: "absolute",
-                  width: `${size}px`,
-                  height: `${size}px`,
-                  left: `${left}%`,
-                  top: `-${size}px`,
-                  borderRadius: shape,
-                  opacity: Math.random() * 0.5 + 0.5,
-                  animation: `confetti-fall ${duration}s linear ${delay}s forwards`,
-                }}
-              />
-            );
-          })}
-          {/* Add the keyframe animation here */}
+          {confettiPieces.map((piece) => (
+            <div
+              key={piece.id}
+              className={`${piece.color}`}
+              style={{
+                position: "absolute",
+                width: `${piece.size}px`,
+                height: `${piece.size}px`,
+                left: `${piece.left}%`,
+                top: `-${piece.size}px`,
+                borderRadius: piece.shape,
+                opacity: piece.opacity,
+                animation: `confetti-fall ${piece.duration}s linear forwards`,
+                transform: `rotate(${piece.rotate}deg)`,
+              }}
+            />
+          ))}
           <style jsx>{`
             @keyframes confetti-fall {
               0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 1;
+                transform: translateY(0) translateX(0) rotate(0deg);
               }
               100% {
-                transform: translateY(100vh) rotate(720deg);
+                transform: translateY(100vh) translateX(var(--drift, 0px))
+                  rotate(720deg);
                 opacity: 0;
               }
             }
