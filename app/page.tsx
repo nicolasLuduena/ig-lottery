@@ -24,6 +24,7 @@ export default function InstagramLottery() {
   const [countdown, setCountdown] = useState(5);
   const [winner, setWinner] = useState<Comment | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
+  // eslint-disable-next-line
   const [confettiPieces, setConfettiPieces] = useState<any[]>([]);
   const [currentSelection, setCurrentSelection] = useState<Comment | null>(
     null,
@@ -39,12 +40,13 @@ export default function InstagramLottery() {
       .filter((line) => line.trim())
       .map((line) => {
         const values = line.split(";").map((v) => v.trim().replace(/"/g, ""));
-        const comment: any = {};
+
+        const comment: Record<string, string> = {};
         headers.forEach((header, index) => {
           comment[header] = values[index] || "";
         });
 
-        return comment as Comment;
+        return comment as unknown as Comment;
       });
     //.filter((comment) => comment.username && comment.comment_id);
   };
@@ -309,7 +311,7 @@ export default function InstagramLottery() {
                           @{winner.username}
                         </div>
                         <div className="text-lg text-gray-700 mt-2">
-                          "{winner.text}"
+                          &quot{winner.text}&quot
                         </div>
                         <div className="text-sm text-muted-foreground mt-2">
                           Comment ID: {winner.comment_id}
