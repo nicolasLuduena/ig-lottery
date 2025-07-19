@@ -162,7 +162,7 @@ export default function InstagramLottery() {
     return comment.username?.[0]?.toUpperCase();
   };
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 p-4">
       {/* Confetti Animation */}
 
       {showConfetti && (
@@ -199,7 +199,7 @@ export default function InstagramLottery() {
         </div>
       )}
 
-      <div className="max-w-2xl mx-auto space-y-6">
+      <div className="max-w-4xl mx-auto space-y-6 w-full px-4">
         <Card className="text-center">
           <CardHeader>
             <CardTitle className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
@@ -311,10 +311,7 @@ export default function InstagramLottery() {
                           @{winner.username}
                         </div>
                         <div className="text-lg text-gray-700 mt-2">
-                          &quot{winner.text}&quot
-                        </div>
-                        <div className="text-sm text-muted-foreground mt-2">
-                          Comment ID: {winner.comment_id}
+                          {`"${winner.text}"`}
                         </div>
                       </div>
                     </div>
