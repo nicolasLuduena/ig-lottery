@@ -265,12 +265,7 @@ export default function InstagramLottery() {
                       <Card className="p-4 bg-gradient-to-r from-purple-100 to-pink-100">
                         <div className="flex items-center gap-4">
                           <Avatar className="w-12 h-12">
-                            <AvatarImage
-                              src={
-                                currentSelection.profile_pic_url ||
-                                "/placeholder.svg"
-                              }
-                            />
+                            <AvatarImage src={"/placeholder.svg"} />
                             <AvatarFallback>
                               {showAvatarFallBack(currentSelection)}
                             </AvatarFallback>
@@ -302,7 +297,11 @@ export default function InstagramLottery() {
                     <div className="flex items-center gap-6">
                       <Avatar className="w-20 h-20 border-4 border-yellow-400">
                         <AvatarImage
-                          src={winner.profile_pic_url || "/placeholder.svg"}
+                          src={
+                            winner.profile_pic_url
+                              ? `/api/proxy?url=${encodeURIComponent(winner.profile_pic_url)}`
+                              : "/placeholder.svg"
+                          }
                         />
                         <AvatarFallback className="text-2xl">
                           {showAvatarFallBack(winner)}
